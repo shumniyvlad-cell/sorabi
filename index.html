@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sorabi</title>
+<meta name="description" content="Полина Sorabi: стримы на Twitch, телега «Сораби чето там» и закрытые фотосеты на Boosty.">
+<meta property="og:title" content="Sorabi">
+<meta property="og:description" content="На твиче — для всех. На бусти — для своих.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="img/hero-fur.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23000'/%3E%3Ctext x='16' y='25' text-anchor='middle' font-family='Arial Narrow,Arial' font-weight='900' font-size='26' fill='%23fff'%3ES%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sofia+Sans+Extra+Condensed:wght@800;900&family=Sofia+Sans+Condensed:wght@600;800&family=Sofia+Sans:wght@400;600&display=swap" rel="stylesheet">
+<script>
+  // На маке с «Уменьшить движение» анимации выключены; ?motion=1 включает их принудительно.
+  (function () {
+    var force = new URLSearchParams(location.search).get('motion') === '1';
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (force || !reduce) document.documentElement.classList.add('motion');
+  })();
+</script>
+<style>
+  :root {
+    --white: #FFFFFF;
+    --black: #000000;
+    --red: #E3102E;
+    --grey-on-white: #6B6B6B;
+    --grey-on-black: #8E8E8E;
+
+    --edge: clamp(12px, 1.4vw, 22px);
+    --xc: 'Sofia Sans Extra Condensed', 'Arial Narrow', sans-serif;
+    --c: 'Sofia Sans Condensed', 'Arial Narrow', sans-serif;
+    --body: 'Sofia Sans', system-ui, -apple-system, sans-serif;
+
+    /* SORABI в Sofia Sans Extra Condensed 900 = 2.39 кегля в ширину */
+    --name-fit: calc((100vw - 2 * var(--edge)) / 2.42);
+    --name: min(var(--name-fit), 40svh);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html:not(.motion) { scroll-behavior: auto; } }
+  body {
+    margin: 0; background: var(--black); color: var(--white);
+    font: 400 17px/1.5 var(--body);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+  }
+  /* плёночное зерно поверх всего: сводит айфонные фото в одну съёмку */
+  body::after {
+    content: ""; position: fixed; inset: -50%; z-index: 90; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: .16; mix-blend-mode: overlay;
+  }
+  img { display: block; max-width: 100%; }
+  figure { margin: 0; }
+  h1, h2, h3, p, ul, dl, dd { margin: 0; padding: 0; }
+  ul { list-style: none; }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
+
+  .light { background: var(--white); color: var(--black); }
+  .dark { background: var(--black); color: var(--white); }
+
+  /* плашка-подпись, как в журнале */
+  .plate {
+    display: inline-block; padding: 4px 7px 5px;
+    background: var(--black); color: var(--white);
+    font: 600 13px/1.15 var(--c); letter-spacing: .01em;
+  }
+  .dark .plate { background: var(--white); color: var(--black); }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 50px; padding: 2px 20px 0;
+    border: 2px solid currentColor; background: transparent;
+    font: 800 22px/1 var(--xc); text-transform: uppercase; letter-spacing: .01em;
+    text-decoration: none; cursor: pointer; color: inherit;
+    transition: background-color .15s, color .15s, border-color .15s;
+  }
+  .light .btn:hover { background: var(--black); color: var(--white); }
+  .dark .btn:hover { background: var(--white); color: var(--black); }
+  .btn-red, .light .btn-red { background: var(--red); border-color: var(--red); color: var(--white); }
+  .btn-red:hover, .light .btn-red:hover { background: var(--black); border-color: var(--black); color: var(--white); }
+
+  .display {
+    font: 900 clamp(52px, 9.4vw, 156px)/.84 var(--xc);
+    text-transform: uppercase; letter-spacing: -.005em;
+  }
+
+  /* ---------- шапка ---------- */
+  /* белая шапка с инверсией: читается и на чёрном, и на белом, и на фото */
+  .top {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 40;
+    display: flex; align-items: center; gap: 6px;
+    padding: 12px calc(var(--edge) + 104px) 12px var(--edge);
+    color: var(--white); mix-blend-mode: difference;
+    pointer-events: none;
+  }
+  .top a { pointer-events: auto; }
+  .brand { margin-right: auto; font: 900 26px/1 var(--xc); text-decoration: none; letter-spacing: .01em; }
+  .top-links { display: flex; gap: 6px; }
+  .top-links a, .hot {
+    display: block; padding: 5px 9px 6px; border: 1.5px solid currentColor;
+    font: 600 14px/1 var(--c); text-decoration: none;
+  }
+  .top-links a:hover { background: var(--white); color: var(--black); }
+  .hot {
+    position: fixed; top: 12px; right: var(--edge); z-index: 41;
+    background: var(--red); border-color: var(--red); color: var(--white);
+  }
+  .hot:hover { background: var(--white); border-color: var(--black); color: var(--red); }
+
+  /* ---------- первый экран ---------- */
+  .hero { position: relative; height: 100svh; min-height: 560px; overflow: hidden; }
+  .hero-photos { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
+  .hp { position: relative; overflow: hidden; }
+  .hp img { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.06) saturate(1.05); }
+  .hp-1 img { object-position: 50% 30%; }
+  .hp-2 img { object-position: 50% 20%; }
+  .hp-3 img { object-position: 50% 35%; }
+  .hero::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(180deg, rgba(0,0,0,.35) 0, rgba(0,0,0,0) 18%, rgba(0,0,0,0) 46%, rgba(0,0,0,.72) 100%);
+  }
+  .hero-bottom { position: absolute; left: var(--edge); right: var(--edge); bottom: 14px; z-index: 2; }
+  .name {
+    font: 900 var(--name)/.78 var(--xc); letter-spacing: -.01em;
+    border-top: 2px solid var(--white); border-bottom: 2px solid var(--white);
+    padding-top: .06em; margin-top: 10px;
+    white-space: nowrap; overflow: hidden;
+  }
+  .name span { display: inline-block; }
+  .hero-line { display: flex; justify-content: space-between; gap: 16px; margin-top: 8px; font: 800 clamp(16px, 1.6vw, 22px)/1.1 var(--c); text-transform: uppercase; }
+  @media (max-width: 760px) {
+    .hero-photos { grid-template-columns: 1fr; }
+    .hp-2, .hp-3 { display: none; }
+    .hero-line { flex-direction: column; gap: 2px; }
+  }
+
+  .motion .hp { animation: reveal 1.1s cubic-bezier(.7, 0, .2, 1) both; }
+  .motion .hp-2 { animation-delay: .12s; }
+  .motion .hp-3 { animation-delay: .24s; }
+  .motion .name span { animation: rise .9s cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(.55s + var(--i) * 60ms); }
+  .motion .hero-line, .motion .hero-bottom .plate { animation: fade .6s ease-out both 1.1s; }
+  @keyframes reveal { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
+  @keyframes rise { from { transform: translateY(105%); } }
+  @keyframes fade { from { opacity: 0; } }
+
+  /* ---------- кто это ---------- */
+  .intro { padding: clamp(80px, 9vw, 140px) var(--edge) clamp(56px, 6vw, 96px); }
+  .intro-h span { display: block; }
+  .intro-h .l2 { padding-left: 18%; }
+  .intro-grid {
+    display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--edge);
+    margin-top: clamp(28px, 4vw, 56px); align-items: start;
+  }
+  .ig-a { grid-column: 1 / span 4; }
+  .ig-text { grid-column: 5 / span 3; display: grid; gap: 18px; padding-top: 4px; }
+  .ig-b { grid-column: 8 / span 5; margin-top: clamp(60px, 12vw, 200px); }
+  .ig-text p { max-width: 28em; }
+  .ig-text .btn { justify-self: start; margin-top: 6px; }
+  figcaption { display: flex; justify-content: space-between; gap: 12px; margin-top: 8px; font: 600 14px/1.25 var(--c); }
+  figcaption time { color: var(--grey-on-white); white-space: nowrap; }
+  .ig-a img, .ig-b img { width: 100%; filter: contrast(1.05); }
+  @media (max-width: 900px) {
+    .intro-h .l2 { padding-left: 0; }
+    .ig-a { grid-column: 1 / span 6; }
+    .ig-text { grid-column: 7 / span 6; }
+    .ig-b { grid-column: 1 / -1; margin-top: 8px; }
+  }
+  @media (max-width: 560px) {
+    .ig-a, .ig-text { grid-column: 1 / -1; }
+  }
+
+  /* ---------- жизнь ---------- */
+  .life { padding: clamp(80px, 9vw, 140px) var(--edge) clamp(64px, 7vw, 110px); position: relative; }
+  .life-h2 { text-align: right; position: relative; z-index: 2; margin-top: -.42em; pointer-events: none; }
+  .mosaic {
+    display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-auto-rows: clamp(70px, 8.2vw, 130px);
+    gap: 6px; margin-top: clamp(20px, 2.4vw, 36px);
+  }
+  .m { position: relative; overflow: hidden; background: #111; }
+  .m img { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.05) saturate(1.05); }
+  .m .plate { position: absolute; left: 8px; top: 8px; max-width: calc(100% - 16px); }
+  .m-dog { grid-column: 1 / span 3; grid-row: 1 / span 4; }
+  .m-foot { grid-column: 4 / span 5; grid-row: 1 / span 3; }
+  .m-poker { grid-column: 9 / span 4; grid-row: 1 / span 4; }
+  .m-room { grid-column: 4 / span 3; grid-row: 4 / span 3; }
+  .m-straw { grid-column: 7 / span 2; grid-row: 4 / span 4; }
+  .m-ferrari { grid-column: 1 / span 3; grid-row: 5 / span 3; }
+  .m-banya { grid-column: 9 / span 4; grid-row: 5 / span 3; }
+  .m-room { grid-row: 4 / span 4; }
+  .m-foot img { object-position: 50% 25%; }
+  .m-banya img { object-position: 50% 30%; }
+  .life-notes {
+    display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--edge);
+    margin-top: clamp(36px, 5vw, 72px); align-items: end;
+  }
+  .life-notes ul { grid-column: 1 / span 7; display: grid; gap: 16px; }
+  .life-notes li { display: grid; grid-template-columns: minmax(130px, 1fr) 3fr; gap: var(--edge); padding-top: 12px; border-top: 2px solid var(--white); }
+  .life-notes b { font: 800 22px/1 var(--xc); text-transform: uppercase; }
+  .life-notes .btn { grid-column: 9 / span 4; justify-self: end; }
+  @media (max-width: 900px) {
+    .mosaic { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 46vw; }
+    .m-dog, .m-foot, .m-poker, .m-room, .m-straw, .m-ferrari, .m-banya { grid-column: auto; grid-row: auto; }
+    .m-foot { grid-column: 1 / -1; grid-row: span 1; }
+    .m-dog, .m-straw { grid-row: span 2; }
+    .life-notes ul, .life-notes .btn { grid-column: 1 / -1; justify-self: start; }
+    .life-notes li { grid-template-columns: 1fr; gap: 6px; }
+  }
+
+  /* ---------- бусти ---------- */
+  .boosty { padding: clamp(80px, 9vw, 140px) var(--edge) clamp(64px, 7vw, 110px); }
+  .boosty-h { color: var(--red); }
+  .boosty-h span { display: block; }
+  .boosty-h .l2 { padding-left: 12%; }
+  .boosty-lead { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--edge); margin-top: clamp(20px, 2.6vw, 40px); }
+  .boosty-lead p { grid-column: 1 / span 5; max-width: 30em; }
+  .boosty-lead .plate { grid-column: 12; justify-self: end; align-self: start; background: var(--red); font-size: 18px; padding: 6px 10px 7px; }
+
+  .sets {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(2, clamp(220px, 24vw, 380px));
+    gap: 6px; margin-top: clamp(28px, 3.6vw, 52px);
+  }
+  .set {
+    position: relative; overflow: hidden; display: block; width: 100%; height: 100%;
+    padding: 0; border: 0; background: #222; color: var(--white); text-align: left; cursor: pointer; font: inherit;
+  }
+  .set:first-child { grid-column: 1 / span 2; grid-row: 1 / span 2; }
+  .set img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.06); transition: transform .5s cubic-bezier(.2, .8, .2, 1); }
+  .set:hover img, .set:focus-visible img { transform: scale(1.12); }
+  .set::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,0) 40%, rgba(0,0,0,.6)); }
+  .set-top { position: absolute; z-index: 1; top: 10px; left: 10px; right: 10px; display: flex; justify-content: space-between; align-items: start; gap: 8px; }
+  .set-top .plate { background: var(--white); color: var(--black); }
+  .set-lock { width: 30px; height: 30px; display: grid; place-items: center; background: var(--black); }
+  .set-lock svg { width: 16px; height: 16px; }
+  .set-body { position: absolute; z-index: 1; left: 12px; right: 12px; bottom: 12px; }
+  .set-title { display: block; font: 900 clamp(30px, 3.4vw, 54px)/.86 var(--xc); text-transform: uppercase; }
+  .set:first-child .set-title { font-size: clamp(44px, 6.4vw, 104px); }
+  .set-quote { display: block; margin-top: 8px; font: 600 15px/1.25 var(--c); }
+  @media (max-width: 900px) {
+    .sets { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; grid-auto-rows: 62vw; }
+    .set:first-child { grid-column: 1 / -1; grid-row: span 1; }
+    .boosty-lead p { grid-column: 1 / span 10; }
+    .boosty-lead .plate { grid-column: 11 / span 2; }
+  }
+
+  .tiers-wrap { margin-top: clamp(72px, 9vw, 140px); }
+  .tiers-head { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--edge); align-items: end; }
+  .tiers-head h3 { grid-column: 1 / span 8; }
+  .tiers-head p { grid-column: 9 / span 4; font: 600 16px/1.3 var(--c); }
+  .tiers { margin-top: clamp(24px, 3vw, 40px); }
+  .tier {
+    display: grid; grid-template-columns: 4fr 2fr 4fr 2fr; gap: var(--edge); align-items: center;
+    padding: 18px 0; border-top: 3px solid var(--black);
+  }
+  .tier:last-child { border-bottom: 3px solid var(--black); }
+  .tier-name { font: 900 clamp(30px, 3.6vw, 56px)/.9 var(--xc); text-transform: uppercase; }
+  .tier-price { font: 900 clamp(30px, 3.6vw, 56px)/.9 var(--xc); white-space: nowrap; }
+  .tier-price small { display: block; margin-top: 4px; font: 600 14px/1 var(--c); color: var(--grey-on-white); }
+  .tier-perks { max-width: 30em; }
+  .tier .btn { justify-self: end; }
+  .tiers-note { margin-top: 16px; font: 600 15px/1.3 var(--c); color: var(--grey-on-white); }
+  @media (max-width: 900px) {
+    .tiers-head h3, .tiers-head p { grid-column: 1 / -1; }
+    .tier { grid-template-columns: 1fr auto; row-gap: 10px; }
+    .tier-perks { grid-column: 1 / -1; }
+    .tier .btn { grid-column: 1 / -1; justify-self: stretch; }
+  }
+
+  /* ---------- телега ---------- */
+  .tg { padding: clamp(80px, 9vw, 140px) var(--edge) clamp(64px, 7vw, 110px); }
+  .tg-head { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--edge); align-items: end; }
+  .tg-head h2 { grid-column: 1 / span 9; }
+  .tg-head p { grid-column: 10 / span 3; font: 600 16px/1.3 var(--c); }
+  .quotes { margin-top: clamp(36px, 4.6vw, 64px); }
+  .quotes li { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--edge); align-items: baseline; padding: 18px 0 20px; border-top: 2px solid var(--white); }
+  .quotes q { grid-column: 1 / span 8; quotes: none; font: 800 clamp(34px, 4.6vw, 76px)/.92 var(--xc); }
+  .quotes span { grid-column: 9 / span 4; font: 600 15px/1.3 var(--c); color: var(--grey-on-black); }
+  .quotes time { color: var(--white); margin-right: 8px; }
+  .tg .btn { margin-top: 28px; }
+  @media (max-width: 900px) {
+    .tg-head h2, .tg-head p, .quotes q, .quotes span { grid-column: 1 / -1; }
+  }
+
+  /* ---------- титры ---------- */
+  .credits { padding: clamp(64px, 7vw, 110px) var(--edge) 14px; }
+  .cr { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px var(--edge); }
+  .cr dt { font: 600 13px/1.2 var(--c); color: var(--grey-on-white); }
+  .cr dd { margin-top: 4px; font: 800 24px/1 var(--xc); text-transform: uppercase; }
+  .cr a { text-decoration: none; }
+  .cr a:hover { color: var(--red); }
+  .f-name { margin-top: clamp(48px, 6vw, 96px); font: 900 var(--name-fit)/.78 var(--xc); letter-spacing: -.01em; border-top: 2px solid var(--black); padding-top: .05em; white-space: nowrap; overflow: hidden; }
+  .f-bottom { display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; padding-top: 8px; border-top: 2px solid var(--black); font: 600 13px/1.2 var(--c); }
+  @media (max-width: 700px) { .cr { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+  /* ---------- окно закрытого сета ---------- */
+  .sheet {
+    width: min(760px, calc(100% - 24px)); max-height: calc(100svh - 24px); padding: 0;
+    border: 0; background: var(--white); color: var(--black);
+  }
+  .sheet::backdrop { background: rgba(0, 0, 0, .78); }
+  .sheet-in { display: grid; grid-template-columns: 5fr 6fr; }
+  .sheet-img { position: relative; min-height: 340px; background: #222; }
+  .sheet-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .sheet-body { display: grid; align-content: start; gap: 14px; padding: 18px 18px 20px; }
+  .sheet-title { font: 900 clamp(40px, 5vw, 64px)/.86 var(--xc); text-transform: uppercase; }
+  .sheet-quote { font: 600 17px/1.3 var(--c); }
+  .sheet-tier { padding-top: 12px; border-top: 2px solid var(--black); }
+  .sheet-close { justify-self: start; padding: 0; border: 0; background: none; font: 600 15px/1 var(--c); text-decoration: underline; text-underline-offset: 4px; cursor: pointer; color: var(--grey-on-white); }
+  .motion .sheet[open] { animation: up .35s cubic-bezier(.2, .8, .2, 1); }
+  @keyframes up { from { transform: translateY(24px); opacity: 0; } }
+  @media (max-width: 640px) {
+    .sheet-in { grid-template-columns: 1fr; }
+    .sheet-img { min-height: 200px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="#top">SORABI</a>
+  <nav class="top-links" aria-label="Соцсети">
+    <a data-link="twitch" href="#">twitch</a>
+    <a data-link="telegram" href="#">телега</a>
+  </nav>
+</header>
+<a class="hot" href="#boosty">бусти 18+</a>
+
+<main>
+  <section class="hero dark" id="top">
+    <div class="hero-photos">
+      <figure class="hp hp-1"><img src="img/hero-fur.jpg" alt="Полина в шубе и чокере"></figure>
+      <figure class="hp hp-2"><img src="img/hero-maldives.jpg" alt="Полина в тёмных очках, селфи на Мальдивах"></figure>
+      <figure class="hp hp-3"><img src="img/hero-red.jpg" alt="Полина в красной олимпийке, селфи в зеркале"></figure>
+    </div>
+    <div class="hero-bottom">
+      <p class="plate">стримы, мальдивы и драмы — с 2015-го</p>
+      <h1 class="name" aria-label="Sorabi"><span style="--i:0">S</span><span style="--i:1">O</span><span style="--i:2">R</span><span style="--i:3">A</span><span style="--i:4">B</span><span style="--i:5">I</span></h1>
+      <p class="hero-line"><span>на твиче — для всех</span><span>на бусти — для своих</span></p>
+    </div>
+  </section>
+
+  <section class="intro light">
+    <h2 class="display intro-h"><span>Человек на любителя…</span><span class="l2">на любителя прекрасного</span></h2>
+    <div class="intro-grid">
+      <figure class="ig-a">
+        <img src="img/wow.jpg" alt="World of Warcraft на большом телевизоре, в углу — вебка Полины" loading="lazy">
+        <figcaption><span>«сорри, сегодня на другой работе!»</span><time>29.09</time></figcaption>
+      </figure>
+      <div class="ig-text">
+        <p>привет, я полина. стримлю на твиче с 2015-го, в варкрафте — с 2011-го. болтаю с чатом обо всём, по воскресеньям разбираю новости и драмы, летаю на мальдивы одна и иногда застреваю в стиралке. последнее — на бусти.</p>
+        <p>160 тысяч на твиче, 15 тысяч в телеге и одна собака-отличник.</p>
+        <a class="btn" data-link="twitch" href="#">Смотреть стрим</a>
+      </div>
+      <figure class="ig-b">
+        <img src="img/face.jpg" alt="Полина крупным планом, без макияжа" loading="lazy">
+        <figcaption><span>«прощаемся с июлем, он был так себе»</span><time>01.08</time></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="life dark" id="streams">
+    <h2 class="display">Так отдыхают</h2>
+    <div class="mosaic">
+      <figure class="m m-dog"><img src="img/dog.jpg" alt="Собака Полины с медалью" loading="lazy"><span class="plate">отличник: окд на 95 из 100</span></figure>
+      <figure class="m m-foot"><img src="img/football.jpg" alt="Полина на трибуне стадиона" loading="lazy"><span class="plate">«я поела и выпила, ну а футбол как всегда»</span></figure>
+      <figure class="m m-poker"><img src="img/poker.jpg" alt="Покер с подругами" loading="lazy"><span class="plate">др подруги на яхте</span></figure>
+      <figure class="m m-room"><img src="img/maldives-room.jpg" alt="Вид из виллы на океан" loading="lazy"><span class="plate">мальдивы, соло</span></figure>
+      <figure class="m m-straw"><img src="img/strawberries.jpg" alt="Клубника со сливками" loading="lazy"><span class="plate">клубника, разумеется</span></figure>
+      <figure class="m m-ferrari"><img src="img/ferrari.jpg" alt="Руль феррари" loading="lazy"><span class="plate">«на феррике за город»</span></figure>
+      <figure class="m m-banya"><img src="img/banya.jpg" alt="Полина в красной шапке в бане" loading="lazy"><span class="plate">парная</span></figure>
+    </div>
+    <h2 class="display life-h2">Любители ММОРПГ овер 30</h2>
+    <div class="life-notes">
+      <ul>
+        <li><b>каждый день</b><span>просто болтаем: отношения, путешествия и кто у них там погоду пишет.</span></li>
+        <li><b>по воскресеньям</b><span>новости и драмы недели. не можем выбрать тему — аукцион: кто больше соберёт, того и смотрим.</span></li>
+        <li><b>когда душа просит</b><span>world of warcraft, league of legends, pubg и вуман симулятор.</span></li>
+      </ul>
+      <a class="btn" data-link="twitch" href="#">twitch.tv/sorabi_</a>
+    </div>
+  </section>
+
+  <section class="boosty light" id="boosty">
+    <h2 class="display boosty-h"><span>На твиче — для всех.</span><span class="l2">На бусти — для своих.</span></h2>
+    <div class="boosty-lead">
+      <p>закрытые фотосеты. превью размыты специально, целиком — по подписке на boosty. нажми на сет — покажу, с какого уровня он открывается.</p>
+      <span class="plate">18+</span>
+    </div>
+    <div class="sets" id="sets"></div>
+
+    <div class="tiers-wrap">
+      <div class="tiers-head">
+        <h3 class="display">Вы не по акции</h3>
+        <p>«мужчины, знайте себе цену — вы не по акции». а вот мои:</p>
+      </div>
+      <ul class="tiers" id="tiers"></ul>
+      <p class="tiers-note">оплата и доступ — на boosty. если страница оплаты не грузится, выключи впн — проверено.</p>
+    </div>
+  </section>
+
+  <section class="tg dark" id="tg">
+    <div class="tg-head">
+      <h2 class="display">Сораби чето там</h2>
+      <p>моя телега: анонсы стримов, мальдивы в деньгах, нытьё, собака и купальники. 15 тысяч уже там.</p>
+    </div>
+    <ul class="quotes">
+      <li><q>СКОЛЬКО. ЭТО. В ДЕНЬГАХ???</q><span><time>01.10</time>вопрос к посту про мальдивы. ответ: 7 890 $ за неделю</span></li>
+      <li><q>братик… я застряла(</q><span><time>09.07</time>анонс сета в прачечной</span></li>
+      <li><q>внимание, перед вами отличник!!</q><span><time>04.09</time>собака сдала окд на 95 из 100</span></li>
+      <li><q>сорри, сегодня на другой работе!</q><span><time>29.09</time>про варкрафт</span></li>
+    </ul>
+    <a class="btn" data-link="telegram" href="#">Читать телегу</a>
+  </section>
+</main>
+
+<footer class="credits light">
+  <dl class="cr">
+    <div><dt>в главной роли</dt><dd>полина sorabi</dd></div>
+    <div><dt>отличник окд</dt><dd>собака</dd></div>
+    <div><dt>стримы</dt><dd><a data-link="twitch" href="#">twitch.tv/sorabi_</a></dd></div>
+    <div><dt>болтовня</dt><dd><a data-link="telegram" href="#">t.me/SorabiToday</a></dd></div>
+    <div><dt>фото 18+</dt><dd><a data-link="boosty" href="#">boosty.to/sorabi_</a></dd></div>
+    <div><dt>инстаграм</dt><dd><a data-link="instagram" href="#">@sorabi_meow</a></dd></div>
+  </dl>
+  <p class="f-name" aria-hidden="true">SORABI</p>
+  <div class="f-bottom"><span>© 2026 sorabi</span><span>18+ — только на бусти</span></div>
+</footer>
+
+<dialog class="sheet" id="sheet" aria-labelledby="sh-title">
+  <div class="sheet-in">
+    <div class="sheet-img"><img id="sh-img" alt=""></div>
+    <div class="sheet-body">
+      <span class="plate" id="sh-date"></span>
+      <h3 class="sheet-title" id="sh-title"></h3>
+      <p class="sheet-quote" id="sh-quote"></p>
+      <p class="sheet-tier" id="sh-tier"></p>
+      <a class="btn btn-red" id="sh-go" target="_blank" rel="noopener"></a>
+      <form method="dialog"><button class="sheet-close">закрыть</button></form>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  /* ===== Всё, что меняется, — здесь ===== */
+  const LINKS = {
+    twitch: 'https://twitch.tv/sorabi_',
+    telegram: 'https://t.me/SorabiToday',
+    instagram: 'https://instagram.com/sorabi_meow',
+    boosty: 'https://boosty.to/sorabi_',
+  };
+
+  // Уровни подписки — ЧЕРНОВИК: названия, цены и состав свести с реальными уровнями на Boosty.
+  // link — прямая ссылка на оплату уровня, если есть; иначе ведёт на страницу Boosty.
+  const TIERS = [
+    { name: 'Мяу', price: 300, perks: 'фото с отдыха, закулисье стримов и новые посты раньше телеги.' },
+    { name: 'Застряла в стиралке', price: 700, perks: 'всё из «мяу» и все фотосеты целиком: прачечная, луна, шуба, купальники.' },
+    { name: 'Наливные яблочки', price: 1500, perks: 'вообще всё, включая видео и яблочный спас. весь год — только самые сладкие.' },
+  ];
+
+  // Закрытые сеты. tier — номер уровня из TIERS (0 — первый).
+  // img — только УЖЕ размытое превью из img/locked/. Оригиналы в папку сайта не класть: сайт статичный, их скачают.
+  const SETS = [
+    { title: 'Прачечная', date: 'июль 2026', quote: '«10 застреваний в стиралке из 10»', img: 'img/locked/laundry.jpg', tier: 1 },
+    { title: 'Луна', date: 'июнь 2026', quote: '«мяу!»', img: 'img/locked/moon.jpg', tier: 1 },
+    { title: 'Яблочный спас', date: 'август 2026', quote: '«спасла несколько яблочных садов для вас»', img: 'img/locked/apples.jpg', tier: 2 },
+    { title: 'Шуба', date: 'май 2026', quote: '«блин, какая же я секси…»', img: 'img/locked/fur.jpg', tier: 0 },
+    { title: 'Купальники', date: 'сентябрь 2026', quote: '«первый пошёл»', img: 'img/locked/swim.jpg', tier: 0 },
+  ];
+
+  /* ===== Дальше — отрисовка ===== */
+  const rub = n => n.toLocaleString('ru-RU') + ' ₽';
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const tierLink = t => t.link || LINKS.boosty;
+
+  document.querySelectorAll('[data-link]').forEach(a => {
+    a.href = LINKS[a.dataset.link];
+    a.target = '_blank';
+    a.rel = 'noopener';
+  });
+
+  document.getElementById('tiers').innerHTML = TIERS.map(t => `
+    <li class="tier">
+      <span class="tier-name">${esc(t.name)}</span>
+      <span class="tier-price">${rub(t.price)}<small>в месяц</small></span>
+      <span class="tier-perks">${esc(t.perks)}</span>
+      <a class="btn btn-red" href="${tierLink(t)}" target="_blank" rel="noopener">Оформить</a>
+    </li>`).join('');
+
+  const LOCK = `<svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="1.6" aria-hidden="true"><rect x="3" y="7" width="10" height="7"/><path d="M5.2 7V5a2.8 2.8 0 0 1 5.6 0v2"/></svg>`;
+  document.getElementById('sets').innerHTML = SETS.map((s, i) => `
+    <button class="set" type="button" data-i="${i}" aria-label="Сет «${esc(s.title)}», ${esc(s.date)}. Закрыт, открывается с уровня «${esc(TIERS[s.tier].name)}»">
+      <img src="${esc(s.img)}" alt="" loading="lazy">
+      <span class="set-top" aria-hidden="true"><span class="plate">${esc(s.date)}</span><span class="set-lock">${LOCK}</span></span>
+      <span class="set-body" aria-hidden="true"><span class="set-title">${esc(s.title)}</span><span class="set-quote">${esc(s.quote)}</span></span>
+    </button>`).join('');
+
+  const sheet = document.getElementById('sheet');
+  document.getElementById('sets').addEventListener('click', e => {
+    const btn = e.target.closest('.set');
+    if (!btn) return;
+    const s = SETS[btn.dataset.i], t = TIERS[s.tier];
+    const higher = s.tier < TIERS.length - 1 ? ' и выше' : '';
+    document.getElementById('sh-img').src = s.img;
+    document.getElementById('sh-date').textContent = s.date;
+    document.getElementById('sh-title').textContent = s.title;
+    document.getElementById('sh-quote').textContent = s.quote;
+    document.getElementById('sh-tier').textContent = `целиком — с уровня «${t.name}»${higher}. ${rub(t.price)} в месяц.`;
+    const go = document.getElementById('sh-go');
+    go.href = tierLink(t);
+    go.textContent = `Оформить за ${rub(t.price)}`;
+    sheet.showModal();
+  });
+  // Клик по затемнению вокруг окна закрывает его
+  sheet.addEventListener('click', e => {
+    if (e.target !== sheet) return;
+    const r = sheet.getBoundingClientRect();
+    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) sheet.close();
+  });
+</script>
+</body>
+</html>
